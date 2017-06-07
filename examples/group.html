@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <title>frydBox examples - single photo</title>
+
+    <meta charset="UTF-8">
+
+    <meta name="robots" content="index, follow">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Kamil Frydlewicz">
+
+    <style>
+        textarea {
+            width: 650px;
+            height: 220px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>frydBox: examples</h1>
+
+        <h2>Group of photos</h2>
+
+        <a class="photo" href="http://frydlewicz.pl/photo/Warszawa/DSC07644.jpg"><img src="http://frydlewicz.pl/photo/Warszawa/DSC07644_min.jpg"></a>
+        <a class="photo" href="http://frydlewicz.pl/photo/Warszawa/DSC07655.jpg"><img src="http://frydlewicz.pl/photo/Warszawa/DSC07655_min.jpg"></a>
+        <a class="photo" href="http://frydlewicz.pl/photo/Warszawa/DSC07675.jpg"><img src="http://frydlewicz.pl/photo/Warszawa/DSC07675_min.jpg"></a>
+
+        <p>Click on the above photos</p>
+
+        <p>
+            <textarea readonly>
+<a class="photo" href="http://frydlewicz.pl/photo/Warszawa/DSC07644.jpg">
+    <img src="http://frydlewicz.pl/photo/Warszawa/DSC07644_min.jpg">
+</a>
+<a class="photo" href="http://frydlewicz.pl/photo/Warszawa/DSC07655.jpg">
+    <img src="http://frydlewicz.pl/photo/Warszawa/DSC07655_min.jpg">
+</a>
+<a class="photo" href="http://frydlewicz.pl/photo/Warszawa/DSC07675.jpg">
+    <img src="http://frydlewicz.pl/photo/Warszawa/DSC07675_min.jpg">
+</a>
+
+<script>
+    $(".photo").frydBox();
+</script>
+            </textarea>
+        </p>
+
+        <ul>
+            <li><a href="single.html">Single photo</a></li>
+            <li><a href="conf.html">Configuration</a></li>
+        </ul>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="../jquery.frydBox.min.js"></script>
+
+    <script>
+        $(".photo").frydBox();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <title>frydBox examples - single photo</title>
+
+    <meta charset="UTF-8">
+
+    <meta name="robots" content="index, follow">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Kamil Frydlewicz">
+
+    <style>
+        .table-conf {
+            margin-top: 10px;
+            border-collapse: collapse;
+        }
+        
+        .table-conf td,
+        .table-conf th {
+            padding: 3px 5px;
+            border: 1px solid gray;
+        }
+        
+        .td-prefix,
+        .td-type {
+            font-family: monospace;
+        }
+        
+        .td-desc {
+            font-style: italic;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>frydBox: examples</h1>
+
+        <h2>Configuration</h2>
+
+        <a class="photo" href="http://frydlewicz.pl/photo/Warszawa/DSC07644.jpg"><img src="http://frydlewicz.pl/photo/Warszawa/DSC07644_min.jpg"></a>
+        <a class="photo" href="http://frydlewicz.pl/photo/Warszawa/DSC07655.jpg"><img src="http://frydlewicz.pl/photo/Warszawa/DSC07655_min.jpg"></a>
+        <a class="photo" href="http://frydlewicz.pl/photo/Warszawa/DSC07675.jpg"><img src="http://frydlewicz.pl/photo/Warszawa/DSC07675_min.jpg"></a>
+
+        <p>Click on the above photos</p>
+
+        <table class="table-conf">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Attribute description</th>
+                    <th>Type</th>
+                    <th>Example</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td class="td-prefix">prefix</td>
+                    <td class="td-desc">Prefix in id and class names</td>
+                    <td class="td-type">string</td>
+                    <td class="td-example">'frydBox_'</td>
+                </tr>
+                <tr>
+                    <td class="td-prefix">lazyLoading</td>
+                    <td class="td-desc">Getting images just after site loaded</td>
+                    <td class="td-type">boolean</td>
+                    <td class="td-example">true</td>
+                </tr>
+                <tr>
+                    <td class="td-prefix">lazyLoadingDelay</td>
+                    <td class="td-desc">Time (in millisec) between each download</td>
+                    <td class="td-type">integer</td>
+                    <td class="td-example">100</td>
+                </tr>
+                <tr>
+                    <td class="td-prefix">fadeDuration</td>
+                    <td class="td-desc">Duration (in millisec) of fading images</td>
+                    <td class="td-type">integer</td>
+                    <td class="td-example">400</td>
+                </tr>
+                <tr>
+                    <td class="td-prefix">moveDuration</td>
+                    <td class="td-desc">Duration (in millisec) of changing images</td>
+                    <td class="td-type">integer</td>
+                    <td class="td-example">800</td>
+                </tr>
+                <tr>
+                    <td class="td-prefix">screenPercent</td>
+                    <td class="td-desc">Max screen percent of area occupied</td>
+                    <td class="td-type">float</td>
+                    <td class="td-example">0.88</td>
+                </tr>
+                <tr>
+                    <td class="td-prefix">backOpacity</td>
+                    <td class="td-desc">Opacity of gray background</td>
+                    <td class="td-type">float</td>
+                    <td class="td-example">0.6</td>
+                </tr>
+                <tr>
+                    <td class="td-prefix">shadowOpacity</td>
+                    <td class="td-desc">Opacity of shadows around images</td>
+                    <td class="td-type">float</td>
+                    <td class="td-example">0.6</td>
+                </tr>
+                <tr>
+                    <td class="td-prefix">shadowSize</td>
+                    <td class="td-desc">Size of shadows around images</td>
+                    <td class="td-type">integer</td>
+                    <td class="td-example">18</td>
+                </tr>
+                <tr>
+                    <td class="td-prefix">borderSize</td>
+                    <td class="td-desc">Size of border around images</td>
+                    <td class="td-type">integer</td>
+                    <td class="td-example">13</td>
+                </tr>
+                <tr>
+                    <td class="td-prefix">borderColor</td>
+                    <td class="td-desc">Color of border around images</td>
+                    <td class="td-type">string</td>
+                    <td class="td-example">'white'</td>
+                </tr>
+                <tr>
+                    <td class="td-prefix">borderRadius</td>
+                    <td class="td-desc">Rounding of border around images</td>
+                    <td class="td-type">integer</td>
+                    <td class="td-example">8</td>
+                </tr>
+                <tr>
+                    <td class="td-prefix">scrollBars</td>
+                    <td class="td-desc">Allow site scrollbars when modal</td>
+                    <td class="td-type">boolean</td>
+                    <td class="td-example">false</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <ul>
+            <li><a href="single.html">Single photo</a></li>
+            <li><a href="group.html">Group of photos</a></li>
+        </ul>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="../jquery.frydBox.min.js"></script>
+
+    <script>
+        $(".photo").frydBox({
+            prefix: 'frydBoxNewPrefix_',
+            lazyLoading: true,
+            lazyLoadingDelay: 100,
+            fadeDuration: 100,
+            moveDuration: 0,
+            screenPercent: 0.88,
+            backOpacity: 0.35,
+            shadowOpacity: 0,
+            shadowSize: 0,
+            borderSize: 5,
+            borderColor: 'white',
+            borderRadius: 0,
+            scrollBars: false
+        });
+    </script>
+</body>
+
+</html>
