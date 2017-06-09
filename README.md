@@ -52,5 +52,10 @@ $(".photo").frydBox({
 </script>
 ```
 
+## Examples
+* [Single photo](http://frydlewicz.pl/api/frydBox/examples/single.html)
+* [Group of photos](http://frydlewicz.pl/api/frydBox/examples/group.html)
+* [Configuration](http://frydlewicz.pl/api/frydBox/examples/conf.html)
+
 ## License
 [MIT License](LICENSE.txt)
