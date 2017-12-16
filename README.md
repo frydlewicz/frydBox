@@ -6,6 +6,10 @@ Include it after jQuery script:
 ```html
 <script src="jquery.frydBox.min.js"></script>
 ```
+You can use our cdn hosting:
+```html
+<script src="https://cdn.frydlewicz.pl/app/frydBox/jquery.frydBox.min.js"></script>
+```
 
 ## Use
 Single photo:
@@ -53,9 +57,9 @@ $(".photo").frydBox({
 ```
 
 ## Examples
-* [Single photo](http://frydlewicz.pl/api/frydBox/examples/single.html)
-* [Group of photos](http://frydlewicz.pl/api/frydBox/examples/group.html)
-* [Configuration](http://frydlewicz.pl/api/frydBox/examples/conf.html)
+* [Single photo](https://frydlewicz.pl/app/frydBox/examples/single.html)
+* [Group of photos](https://frydlewicz.pl/app/frydBox/examples/group.html)
+* [Configuration](https://frydlewicz.pl/app/frydBox/examples/conf.html)
 
 ## License
 [MIT License](LICENSE.txt)
