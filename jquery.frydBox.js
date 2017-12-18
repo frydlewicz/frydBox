@@ -5,7 +5,7 @@
  * Copyright (c) 2017 Kamil Frydlewicz
  * www.frydlewicz.pl
  * 
- * Version: 1.0.0
+ * Version: 1.0.1
  * Requires: jQuery v1.2+
  *
  * MIT license:
@@ -76,16 +76,17 @@
         prefix: 'frydBox_',
         lazyLoading: true,
         lazyLoadingDelay: 100,
-        fadeDuration: 400,
-        moveDuration: 800,
+        fadeDuration: 500,
+        moveDuration: 700,
         screenPercent: 0.88,
         backOpacity: 0.6,
         shadowOpacity: 0.6,
         shadowSize: 18,
-        borderSize: 13,
+        borderSize: 12,
         borderColor: 'white',
         borderRadius: 8,
-        scrollBars: false
+        scrollBars: false,
+        fadeWhenMove: true
     };
 
     var $body;
@@ -128,7 +129,7 @@
     }
 
     function build() {
-        console.log(name + ": powered by www.frydlewicz.pl");
+        console.log(name + ': powered by www.frydlewicz.pl');
 
         $body = $('body');
         overflow = $body.css('overflow');
@@ -214,10 +215,8 @@
             }
         }
 
-        $cont.css({
-            width: Math.round(newWidth) + 'px',
-            height: Math.round(newHeight) + 'px'
-        });
+        $cont.css('width', Math.round(newWidth) + 'px');
+        $cont.css('height', Math.round(newHeight) + 'px');
 
         return {
             left: (screenWidth - newWidth) / 2,
@@ -255,10 +254,9 @@
 
         $img.unbind('load').bind('load', function() {
             var offset = setSizeAndGetPos($cont, $img);
-            $cont.css({
-                'left': Math.round(offset.left) + 'px',
-                'top': Math.round(offset.top) + 'px'
-            });
+
+            $cont.css('left', Math.round(offset.left) + 'px');
+            $cont.css('top', Math.round(offset.top) + 'px');
 
             $img.show();
             $cont.fadeIn(config.fadeDuration);
@@ -294,20 +292,52 @@
         }
 
         $imgPrev.unbind('load').bind('load', function() {
-            $cont.animate({
-                'left': screenWidth + 'px'
-            }, config.moveDuration, function() {
-                $cont.css('left', -screenWidth + 'px');
-
-                $img.hide();
-                $imgPrev.show();
-
-                var offset = setSizeAndGetPos($cont, $imgPrev);
-                $cont.css('top', Math.round(offset.top) + 'px');
-
+            if(config.fadeWhenMove) {
                 $cont.animate({
-                    'left': Math.round(offset.left) + 'px'
-                }, config.moveDuration);
+                    opacity: 0
+                }, {
+                    duration: config.fadeDuration,
+                    queue: false
+                });
+            }
+
+            $cont.animate({
+                left: screenWidth + 'px'
+            }, {
+                duration: config.moveDuration,
+                queue: false,
+                complete: function() {
+                    $cont.css('left', -screenWidth + 'px');
+    
+                    $img.hide();
+                    $imgPrev.show();
+    
+                    var offset = setSizeAndGetPos($cont, $imgPrev);
+                    $cont.css('top', Math.round(offset.top) + 'px');
+    
+                    if(config.fadeWhenMove) {
+                        var waitMilisec = 0;
+                        if(config.moveDuration > config.fadeDuration) {
+                            waitMilisec = config.moveDuration - config.fadeDuration;
+                        }
+    
+                        setTimeout(function() {
+                            $cont.animate({
+                                opacity: 1
+                            }, {
+                                duration: config.fadeDuration,
+                                queue: false
+                            });
+                        }, waitMilisec);
+                    }
+    
+                    $cont.stop().animate({
+                        left: Math.round(offset.left) + 'px'
+                    }, {
+                        duration: config.moveDuration,
+                        queue: false
+                    });
+                }
             });
         });
 
@@ -334,20 +364,52 @@
         }
 
         $imgNext.unbind('load').bind('load', function() {
-            $cont.animate({
-                'left': -screenWidth + 'px'
-            }, config.moveDuration, function() {
-                $cont.css('left', screenWidth + 'px');
-
-                $img.hide();
-                $imgNext.show();
-
-                var offset = setSizeAndGetPos($cont, $imgNext);
-                $cont.css('top', Math.round(offset.top) + 'px');
-
+            if(config.fadeWhenMove) {
                 $cont.animate({
-                    'left': Math.round(offset.left) + 'px'
-                }, config.moveDuration);
+                    opacity: 0
+                }, {
+                    duration: config.fadeDuration,
+                    queue: false
+                });
+            }
+
+            $cont.animate({
+                left: -screenWidth + 'px'
+            }, {
+                duration: config.moveDuration,
+                queue: false,
+                complete: function() {
+                    $cont.css('left', screenWidth + 'px');
+    
+                    $img.hide();
+                    $imgNext.show();
+    
+                    var offset = setSizeAndGetPos($cont, $imgNext);
+                    $cont.css('top', Math.round(offset.top) + 'px');
+
+                    if(config.fadeWhenMove) {
+                        var waitMilisec = 0;
+                        if(config.moveDuration > config.fadeDuration) {
+                            waitMilisec = config.moveDuration - config.fadeDuration;
+                        }
+
+                        setTimeout(function() {
+                            $cont.animate({
+                                opacity: 1
+                            }, {
+                                duration: config.fadeDuration,
+                                queue: false
+                            });
+                        }, waitMilisec);
+                    }
+
+                    $cont.stop().animate({
+                        left: Math.round(offset.left) + 'px'
+                    }, {
+                        duration: config.moveDuration,
+                        queue: false
+                    });
+                }
             });
         });
 

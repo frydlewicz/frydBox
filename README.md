@@ -48,7 +48,7 @@ $(".photo").frydBox({
    backOpacity: 0.6,
    shadowOpacity: 0.6,
    shadowSize: 18,
-   borderSize: 13,
+   borderSize: 12,
    borderColor: 'white',
    borderRadius: 8,
    scrollBars: false
