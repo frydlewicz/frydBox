@@ -12,7 +12,7 @@
  *   http://www.opensource.org/licenses/mit-license.php
  */
 
-(function($) {
+(function ($) {
     var name = 'frydBox';
 
     var css = {
@@ -148,7 +148,7 @@
         injectCSS(cssBack, $back);
         $back.css('background', 'rgba(0, 0, 0, ' + config.backOpacity + ')');
 
-        $back.bind('click', function() {
+        $back.bind('click', function () {
             hideBox();
         });
         $body.append($back);
@@ -165,14 +165,14 @@
     function appendNavi($cont, indexCont) {
         var $prev = $('<span id="' + config.prefix + 'prev-' + indexCont + '" class="' + config.prefix + 'prev">&nbsp;</span>');
         injectCSS(cssPrev, $prev);
-        $prev.bind('click', function() {
+        $prev.bind('click', function () {
             clickPrev($cont);
         });
         $cont.append($prev);
 
         var $next = $('<span id="' + config.prefix + 'next-' + indexCont + '" class="' + config.prefix + 'next' + '">&nbsp;</span>');
         injectCSS(cssNext, $next);
-        $next.bind('click', function() {
+        $next.bind('click', function () {
             clickNext($cont);
         });
         $cont.append($next);
@@ -225,14 +225,14 @@
     }
 
     function hideBox() {
-        $('.' + config.prefix + 'cont').fadeOut(config.fadeDuration, function() {
+        $('.' + config.prefix + 'cont').fadeOut(config.fadeDuration, function () {
             var $img = $(this).find('.' + config.prefix + 'img');
 
             $img.hide();
             $img.removeClass(config.prefix + 'active');
         });
 
-        $back.fadeOut(config.fadeDuration, function() {
+        $back.fadeOut(config.fadeDuration, function () {
             if (!config.scrollBars) {
                 $body.css('overflow', overflow);
             }
@@ -252,7 +252,7 @@
         var $cont = $('#' + config.prefix + 'cont-' + indexCont);
         var $img = $('#' + config.prefix + 'img-' + indexCont + '-' + indexImg);
 
-        $img.unbind('load').bind('load', function() {
+        $img.unbind('load').bind('load', function () {
             var offset = setSizeAndGetPos($cont, $img);
 
             $cont.css('left', Math.round(offset.left) + 'px');
@@ -266,7 +266,7 @@
             $body.css('overflow', 'hidden');
         }
 
-        $back.fadeIn(config.fadeDuration, function() {
+        $back.fadeIn(config.fadeDuration, function () {
             var src = $img.attr('data-src');
 
             $img.attr('src', src);
@@ -291,54 +291,54 @@
             return;
         }
 
-        $imgPrev.unbind('load').bind('load', function() {
-            if(config.fadeWhenMove) {
+        $imgPrev.unbind('load').bind('load', function () {
+            if (config.fadeWhenMove) {
                 $cont.animate({
                     opacity: 0
                 }, {
-                    duration: config.fadeDuration,
-                    queue: false
-                });
+                        duration: config.fadeDuration,
+                        queue: false
+                    });
             }
 
             $cont.animate({
                 left: screenWidth + 'px'
             }, {
-                duration: config.moveDuration,
-                queue: false,
-                complete: function() {
-                    $cont.css('left', -screenWidth + 'px');
-    
-                    $img.hide();
-                    $imgPrev.show();
-    
-                    var offset = setSizeAndGetPos($cont, $imgPrev);
-                    $cont.css('top', Math.round(offset.top) + 'px');
-    
-                    if(config.fadeWhenMove) {
-                        var waitMilisec = 0;
-                        if(config.moveDuration > config.fadeDuration) {
-                            waitMilisec = config.moveDuration - config.fadeDuration;
+                    duration: config.moveDuration,
+                    queue: false,
+                    complete: function () {
+                        $cont.css('left', -screenWidth + 'px');
+
+                        $img.hide();
+                        $imgPrev.show();
+
+                        var offset = setSizeAndGetPos($cont, $imgPrev);
+                        $cont.css('top', Math.round(offset.top) + 'px');
+
+                        if (config.fadeWhenMove) {
+                            var waitMilisec = 0;
+                            if (config.moveDuration > config.fadeDuration) {
+                                waitMilisec = config.moveDuration - config.fadeDuration;
+                            }
+
+                            setTimeout(function () {
+                                $cont.animate({
+                                    opacity: 1
+                                }, {
+                                        duration: config.fadeDuration,
+                                        queue: false
+                                    });
+                            }, waitMilisec);
                         }
-    
-                        setTimeout(function() {
-                            $cont.animate({
-                                opacity: 1
-                            }, {
-                                duration: config.fadeDuration,
+
+                        $cont.stop().animate({
+                            left: Math.round(offset.left) + 'px'
+                        }, {
+                                duration: config.moveDuration,
                                 queue: false
                             });
-                        }, waitMilisec);
                     }
-    
-                    $cont.stop().animate({
-                        left: Math.round(offset.left) + 'px'
-                    }, {
-                        duration: config.moveDuration,
-                        queue: false
-                    });
-                }
-            });
+                });
         });
 
         var src = $imgPrev.attr('data-src');
@@ -363,54 +363,54 @@
             return;
         }
 
-        $imgNext.unbind('load').bind('load', function() {
-            if(config.fadeWhenMove) {
+        $imgNext.unbind('load').bind('load', function () {
+            if (config.fadeWhenMove) {
                 $cont.animate({
                     opacity: 0
                 }, {
-                    duration: config.fadeDuration,
-                    queue: false
-                });
+                        duration: config.fadeDuration,
+                        queue: false
+                    });
             }
 
             $cont.animate({
                 left: -screenWidth + 'px'
             }, {
-                duration: config.moveDuration,
-                queue: false,
-                complete: function() {
-                    $cont.css('left', screenWidth + 'px');
-    
-                    $img.hide();
-                    $imgNext.show();
-    
-                    var offset = setSizeAndGetPos($cont, $imgNext);
-                    $cont.css('top', Math.round(offset.top) + 'px');
+                    duration: config.moveDuration,
+                    queue: false,
+                    complete: function () {
+                        $cont.css('left', screenWidth + 'px');
 
-                    if(config.fadeWhenMove) {
-                        var waitMilisec = 0;
-                        if(config.moveDuration > config.fadeDuration) {
-                            waitMilisec = config.moveDuration - config.fadeDuration;
+                        $img.hide();
+                        $imgNext.show();
+
+                        var offset = setSizeAndGetPos($cont, $imgNext);
+                        $cont.css('top', Math.round(offset.top) + 'px');
+
+                        if (config.fadeWhenMove) {
+                            var waitMilisec = 0;
+                            if (config.moveDuration > config.fadeDuration) {
+                                waitMilisec = config.moveDuration - config.fadeDuration;
+                            }
+
+                            setTimeout(function () {
+                                $cont.animate({
+                                    opacity: 1
+                                }, {
+                                        duration: config.fadeDuration,
+                                        queue: false
+                                    });
+                            }, waitMilisec);
                         }
 
-                        setTimeout(function() {
-                            $cont.animate({
-                                opacity: 1
-                            }, {
-                                duration: config.fadeDuration,
+                        $cont.stop().animate({
+                            left: Math.round(offset.left) + 'px'
+                        }, {
+                                duration: config.moveDuration,
                                 queue: false
                             });
-                        }, waitMilisec);
                     }
-
-                    $cont.stop().animate({
-                        left: Math.round(offset.left) + 'px'
-                    }, {
-                        duration: config.moveDuration,
-                        queue: false
-                    });
-                }
-            });
+                });
         });
 
         var src = $imgNext.attr('data-src');
@@ -429,7 +429,7 @@
             }
 
             var img = new Image();
-            img.onload = function() {
+            img.onload = function () {
                 setTimeout(loadImage, config.lazyLoadingDelay, index + 1);
             };
             img.src = array[index];
@@ -442,7 +442,7 @@
         count: 0
     };
 
-    $.fn.frydBox = function(options) {
+    $.fn.frydBox = function (options) {
         $.extend(config, options);
 
         if (window[name].count === 0) {
@@ -455,7 +455,7 @@
         var indexImg = 0;
         var array = [];
 
-        var result = $(this).each(function() {
+        var result = $(this).each(function () {
             var href = $(this).attr('href');
             array.push(href);
 
@@ -475,7 +475,7 @@
             if (document.readyState === 'complete') {
                 lazyLoading(array);
             } else {
-                $(window).bind('load', function() {
+                $(window).bind('load', function () {
                     lazyLoading(array);
                 });
             }
