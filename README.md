@@ -33,7 +33,6 @@ Group of photos:
 $(".photo").frydBox();
 </script>
 ```
-If you want to hide previous, next or close navigation images, just type false.
 
 ## Configuration
 You can set optional parameters:
@@ -60,6 +59,7 @@ $(".photo").frydBox({
 });
 </script>
 ```
+If you want to hide previous, next or close navigation images, just type false.
 
 ## Examples
 * [Single photo](https://frydlewicz.pl/app/frydBox/examples/single.html)
