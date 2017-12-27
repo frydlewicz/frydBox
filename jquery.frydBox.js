@@ -1,16 +1,20 @@
 /*
  * frydBox - jQuery plugin
  * Free and lightweight Lightbox or Fancybox alternative
- * 
+ *
  * Copyright (c) 2017 Kamil Frydlewicz
  * www.frydlewicz.pl
- * 
+ *
  * Version: 1.0.1
  * Requires: jQuery v1.2+
  *
  * MIT license:
  *   http://www.opensource.org/licenses/mit-license.php
  */
+
+if (typeof jQuery === 'undefined') {
+    throw new Error('frydBox requires jQuery')
+}
 
 (function ($) {
     var name = 'frydBox';
@@ -19,29 +23,30 @@
         'box-sizing': 'border-box',
         'padding': '0',
         'margin': '0',
+        'background': 'none',
+        'border': 'none',
         'outline': 'none',
-        'opacity': '1'
+        'opacity': '1',
+        'cursor': 'default'
     }
 
-    var cssBack = $.extend({
+    var cssBack = $.extend({}, css, {
         'display': 'none',
         'position': 'fixed',
         'left': '0',
         'top': '0',
         'z-index': '999999997',
         'width': '100%',
-        'height': '100%',
-        'border': 'none'
-    }, css);
+        'height': '100%'
+    });
 
-    var cssCont = $.extend({
+    var cssCont = $.extend({}, css, {
         'display': 'none',
         'position': 'fixed',
-        'z-index': '999999998',
-        'border': 'none'
-    }, css);
+        'z-index': '999999998'
+    });
 
-    var cssPrev = $.extend({
+    var cssPrev = $.extend({}, css, {
         'position': 'absolute',
         'left': '0',
         'top': '25%',
@@ -49,12 +54,14 @@
         'width': '50%',
         'height': '50%',
         'overflow': 'hidden',
+        'background': 'no-repeat left 20px center',
         'font-size': '10000px',
-        'cursor': 'pointer'
+        'cursor': 'pointer',
+        'opacity': '0',
+        'filter': 'drop-shadow(0 0 5px #000)'
+    });
 
-    }, css);
-
-    var cssNext = $.extend({
+    var cssNext = $.extend({}, css, {
         'position': 'absolute',
         'right': '0',
         'top': '25%',
@@ -62,15 +69,32 @@
         'width': '50%',
         'height': '50%',
         'overflow': 'hidden',
+        'background': 'no-repeat right 20px center',
         'font-size': '10000px',
         'cursor': 'pointer',
-    }, css);
+        'opacity': '0',
+        'filter': 'drop-shadow(0 0 5px #000)'
+    });
 
-    var cssImg = $.extend({
+    var cssClose = $.extend({}, css, {
+        'position': 'absolute',
+        'right': '-10px',
+        'top': '-10px',
+        'z-index': '999999999',
+        'width': '50px',
+        'height': '50px',
+        'overflow': 'hidden',
+        'background': 'no-repeat right top',
+        'cursor': 'pointer',
+        'opacity': '0',
+        'filter': 'drop-shadow(0 0 5px #000)'
+    });
+
+    var cssImg = $.extend({}, css, {
         'display': 'none',
         'width': '100%',
         'height': 'auto'
-    }, css);
+    });
 
     var config = {
         prefix: 'frydBox_',
@@ -78,15 +102,15 @@
         lazyLoadingDelay: 100,
         fadeDuration: 500,
         moveDuration: 700,
+        fadeWhenMove: true,
         screenPercent: 0.88,
         backOpacity: 0.6,
         shadowOpacity: 0.6,
         shadowSize: 18,
-        borderSize: 12,
-        borderColor: 'white',
+        borderSize: 10,
+        borderColor: '#fff',
         borderRadius: 8,
-        scrollBars: false,
-        fadeWhenMove: true
+        scrollBars: false
     };
 
     var $body;
@@ -97,8 +121,29 @@
     var maxWidth;
     var maxHeight;
     var overflow;
+    var path;
 
     /**************************************************************/
+
+    (function() {
+        var scriptUrl;
+        var currentScript = document.currentScript;
+
+        if(currentScript) {
+            scriptUrl = currentScript.src;
+        }
+        else {
+            scriptUrl = location.href;
+        }
+
+        var lastIndexOf = scriptUrl.lastIndexOf('/');
+        if(lastIndexOf >= 0) {
+            path = scriptUrl.substring(0, lastIndexOf + 1);
+        }
+        else {
+            path = scriptUrl.substring(0, scriptUrl.lastIndexOf('\\') + 1);
+        }
+    })();
 
     function resize() {
         screenWidth = $(window).width();
@@ -146,7 +191,6 @@
     function appendBack() {
         $back = $('<div id="' + config.prefix + 'back" class="' + config.prefix + 'back"></div>');
         injectCSS(cssBack, $back);
-        $back.css('background', 'rgba(0, 0, 0, ' + config.backOpacity + ')');
 
         $back.bind('click', function () {
             hideBox();
@@ -165,6 +209,14 @@
     function appendNavi($cont, indexCont) {
         var $prev = $('<span id="' + config.prefix + 'prev-' + indexCont + '" class="' + config.prefix + 'prev">&nbsp;</span>');
         injectCSS(cssPrev, $prev);
+        $prev.bind('mouseenter', function() {
+            if($('.' + config.prefix + 'active').prev('.' + config.prefix + 'img').length) {
+                $(this).css('opacity', '1');
+            }
+        });
+        $prev.bind('mouseleave', function() {
+            $(this).css('opacity', '0');
+        });
         $prev.bind('click', function () {
             clickPrev($cont);
         });
@@ -172,10 +224,31 @@
 
         var $next = $('<span id="' + config.prefix + 'next-' + indexCont + '" class="' + config.prefix + 'next' + '">&nbsp;</span>');
         injectCSS(cssNext, $next);
+        $next.bind('mouseenter', function() {
+            if($('.' + config.prefix + 'active').next('.' + config.prefix + 'img').length) {
+                $(this).css('opacity', '1');
+            }
+        });
+        $next.bind('mouseleave', function() {
+            $(this).css('opacity', '0');
+        });
         $next.bind('click', function () {
             clickNext($cont);
         });
         $cont.append($next);
+
+        var $close = $('<span id="' + config.prefix + 'close-' + indexCont + '" class="' + config.prefix + 'close' + '">&nbsp;</span>');
+        injectCSS(cssClose, $close);
+        $close.bind('mouseenter', function() {
+            $(this).css('opacity', '1');
+        });
+        $close.bind('mouseleave', function() {
+            $(this).css('opacity', '0');
+        });
+        $close.bind('click', function () {
+            hideBox();
+        });
+        $cont.append($close);
     }
 
     function appendImg($cont, src, indexCont, indexImg) {
@@ -296,49 +369,49 @@
                 $cont.animate({
                     opacity: 0
                 }, {
-                        duration: config.fadeDuration,
-                        queue: false
-                    });
+                    duration: config.fadeDuration,
+                    queue: false
+                });
             }
 
             $cont.animate({
                 left: screenWidth + 'px'
             }, {
-                    duration: config.moveDuration,
-                    queue: false,
-                    complete: function () {
-                        $cont.css('left', -screenWidth + 'px');
+                duration: config.moveDuration,
+                queue: false,
+                complete: function () {
+                    $cont.css('left', -screenWidth + 'px');
 
-                        $img.hide();
-                        $imgPrev.show();
+                    $img.hide();
+                    $imgPrev.show();
 
-                        var offset = setSizeAndGetPos($cont, $imgPrev);
-                        $cont.css('top', Math.round(offset.top) + 'px');
+                    var offset = setSizeAndGetPos($cont, $imgPrev);
+                    $cont.css('top', Math.round(offset.top) + 'px');
 
-                        if (config.fadeWhenMove) {
-                            var waitMilisec = 0;
-                            if (config.moveDuration > config.fadeDuration) {
-                                waitMilisec = config.moveDuration - config.fadeDuration;
-                            }
-
-                            setTimeout(function () {
-                                $cont.animate({
-                                    opacity: 1
-                                }, {
-                                        duration: config.fadeDuration,
-                                        queue: false
-                                    });
-                            }, waitMilisec);
+                    if (config.fadeWhenMove) {
+                        var waitMilisec = 0;
+                        if (config.moveDuration > config.fadeDuration) {
+                            waitMilisec = config.moveDuration - config.fadeDuration;
                         }
 
-                        $cont.stop().animate({
-                            left: Math.round(offset.left) + 'px'
-                        }, {
-                                duration: config.moveDuration,
+                        setTimeout(function () {
+                            $cont.animate({
+                                opacity: 1
+                            }, {
+                                duration: config.fadeDuration,
                                 queue: false
                             });
+                        }, waitMilisec);
                     }
-                });
+
+                    $cont.animate({
+                        left: Math.round(offset.left) + 'px'
+                    }, {
+                        duration: config.moveDuration,
+                        queue: false
+                    });
+                }
+            });
         });
 
         var src = $imgPrev.attr('data-src');
@@ -368,49 +441,49 @@
                 $cont.animate({
                     opacity: 0
                 }, {
-                        duration: config.fadeDuration,
-                        queue: false
-                    });
+                    duration: config.fadeDuration,
+                    queue: false
+                });
             }
 
             $cont.animate({
                 left: -screenWidth + 'px'
             }, {
-                    duration: config.moveDuration,
-                    queue: false,
-                    complete: function () {
-                        $cont.css('left', screenWidth + 'px');
+                duration: config.moveDuration,
+                queue: false,
+                complete: function () {
+                    $cont.css('left', screenWidth + 'px');
 
-                        $img.hide();
-                        $imgNext.show();
+                    $img.hide();
+                    $imgNext.show();
 
-                        var offset = setSizeAndGetPos($cont, $imgNext);
-                        $cont.css('top', Math.round(offset.top) + 'px');
+                    var offset = setSizeAndGetPos($cont, $imgNext);
+                    $cont.css('top', Math.round(offset.top) + 'px');
 
-                        if (config.fadeWhenMove) {
-                            var waitMilisec = 0;
-                            if (config.moveDuration > config.fadeDuration) {
-                                waitMilisec = config.moveDuration - config.fadeDuration;
-                            }
-
-                            setTimeout(function () {
-                                $cont.animate({
-                                    opacity: 1
-                                }, {
-                                        duration: config.fadeDuration,
-                                        queue: false
-                                    });
-                            }, waitMilisec);
+                    if (config.fadeWhenMove) {
+                        var waitMilisec = 0;
+                        if (config.moveDuration > config.fadeDuration) {
+                            waitMilisec = config.moveDuration - config.fadeDuration;
                         }
 
-                        $cont.stop().animate({
-                            left: Math.round(offset.left) + 'px'
-                        }, {
-                                duration: config.moveDuration,
+                        setTimeout(function () {
+                            $cont.animate({
+                                opacity: 1
+                            }, {
+                                duration: config.fadeDuration,
                                 queue: false
                             });
+                        }, waitMilisec);
                     }
-                });
+
+                    $cont.animate({
+                        left: Math.round(offset.left) + 'px'
+                    }, {
+                        duration: config.moveDuration,
+                        queue: false
+                    });
+                }
+            });
         });
 
         var src = $imgNext.attr('data-src');
@@ -445,6 +518,33 @@
     $.fn.frydBox = function (options) {
         $.extend(config, options);
 
+        cssBack['background'] = 'rgba(0, 0, 0, ' + config.backOpacity + ')';
+
+        if(typeof config.prevImage === 'undefined') {
+            config.prevImage = path + 'prev.png';
+        }
+        if(config.prevImage !== false) {
+            cssPrev['background'] = 'url(' + config.prevImage + ') ' + cssPrev['background'];
+        }
+
+        if(typeof config.nextImage === 'undefined') {
+            config.nextImage = path + 'next.png';
+        }
+        if(config.nextImage !== false) {
+            cssNext['background'] = 'url(' + config.nextImage + ') ' + cssNext['background'];
+        }
+
+        if(typeof config.closeImage === 'undefined') {
+            config.closeImage = path + 'close.png';
+        }
+        if(config.closeImage !== false) {
+            cssClose['background'] = 'url(' + config.closeImage + ') ' + cssClose['background'];
+        }
+
+        cssImg['border'] = config.borderSize + 'px solid ' + config.borderColor;
+        cssImg['border-radius'] = config.borderRadius + 'px';
+        cssImg['box-shadow'] = '0 0 ' + config.shadowSize + 'px rgba(0, 0, 0, ' + config.shadowOpacity + ')';
+
         if (window[name].count === 0) {
             build();
         }
@@ -460,9 +560,6 @@
             array.push(href);
 
             var $img = appendImg($cont, href, window[name].count, indexImg);
-            $img.css('border', config.borderSize + 'px solid ' + config.borderColor);
-            $img.css('border-radius', config.borderRadius + 'px');
-            $img.css('box-shadow', '0 0 ' + config.shadowSize + 'px rgba(0, 0, 0, ' + config.shadowOpacity + ')');
 
             $(this).attr('data-cont', window[name].count);
             $(this).attr('data-img', indexImg);

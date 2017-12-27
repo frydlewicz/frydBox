@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="author" content="Kamil Frydlewicz">
 
-    <title>frydBox examples - single photo</title>
+    <title>frydBox examples - configuration</title>
 
     <style>
         .table-conf {
@@ -71,61 +71,67 @@
                 <tr>
                     <td class="td-prefix">lazyLoadingDelay</td>
                     <td class="td-desc">Time (in millisec) between each download</td>
-                    <td class="td-type">integer</td>
+                    <td class="td-type">number</td>
                     <td class="td-example">100</td>
                 </tr>
                 <tr>
                     <td class="td-prefix">fadeDuration</td>
                     <td class="td-desc">Duration (in millisec) of fading images</td>
-                    <td class="td-type">integer</td>
+                    <td class="td-type">number</td>
                     <td class="td-example">500</td>
                 </tr>
                 <tr>
                     <td class="td-prefix">moveDuration</td>
                     <td class="td-desc">Duration (in millisec) of changing images</td>
-                    <td class="td-type">integer</td>
+                    <td class="td-type">number</td>
                     <td class="td-example">700</td>
+                </tr>
+                <tr>
+                    <td class="td-prefix">fadeWhenMove</td>
+                    <td class="td-desc">Fade during changing images</td>
+                    <td class="td-type">boolean</td>
+                    <td class="td-example">true</td>
                 </tr>
                 <tr>
                     <td class="td-prefix">screenPercent</td>
                     <td class="td-desc">Max screen percent of area occupied</td>
-                    <td class="td-type">float</td>
+                    <td class="td-type">number</td>
                     <td class="td-example">0.88</td>
                 </tr>
                 <tr>
                     <td class="td-prefix">backOpacity</td>
                     <td class="td-desc">Opacity of gray background</td>
-                    <td class="td-type">float</td>
+                    <td class="td-type">number</td>
                     <td class="td-example">0.6</td>
                 </tr>
                 <tr>
                     <td class="td-prefix">shadowOpacity</td>
                     <td class="td-desc">Opacity of shadows around images</td>
-                    <td class="td-type">float</td>
+                    <td class="td-type">number</td>
                     <td class="td-example">0.6</td>
                 </tr>
                 <tr>
                     <td class="td-prefix">shadowSize</td>
                     <td class="td-desc">Size of shadows around images</td>
-                    <td class="td-type">integer</td>
+                    <td class="td-type">number</td>
                     <td class="td-example">18</td>
                 </tr>
                 <tr>
                     <td class="td-prefix">borderSize</td>
                     <td class="td-desc">Size of border around images</td>
-                    <td class="td-type">integer</td>
-                    <td class="td-example">12</td>
+                    <td class="td-type">number</td>
+                    <td class="td-example">10</td>
                 </tr>
                 <tr>
                     <td class="td-prefix">borderColor</td>
                     <td class="td-desc">Color of border around images</td>
                     <td class="td-type">string</td>
-                    <td class="td-example">'white'</td>
+                    <td class="td-example">'#fff'</td>
                 </tr>
                 <tr>
                     <td class="td-prefix">borderRadius</td>
                     <td class="td-desc">Rounding of border around images</td>
-                    <td class="td-type">integer</td>
+                    <td class="td-type">number</td>
                     <td class="td-example">8</td>
                 </tr>
                 <tr>
@@ -135,10 +141,22 @@
                     <td class="td-example">false</td>
                 </tr>
                 <tr>
-                    <td class="td-prefix">fadeWhenMove</td>
-                    <td class="td-desc">Fade during changing images</td>
-                    <td class="td-type">boolean</td>
-                    <td class="td-example">true</td>
+                    <td class="td-prefix">prevImage</td>
+                    <td class="td-desc">Navigation previous image url</td>
+                    <td class="td-type">string / boolean</td>
+                    <td class="td-example">'prev.png' / false</td>
+                </tr>
+                <tr>
+                    <td class="td-prefix">nextImage</td>
+                    <td class="td-desc">Navigation next image url</td>
+                    <td class="td-type">string / boolean</td>
+                    <td class="td-example">'next.png' / false</td>
+                </tr>
+                <tr>
+                    <td class="td-prefix">closeImage</td>
+                    <td class="td-desc">Navigation close image url</td>
+                    <td class="td-type">string / boolean</td>
+                    <td class="td-example">'close.png' / false</td>
                 </tr>
             </tbody>
         </table>
@@ -159,6 +177,7 @@
             lazyLoadingDelay: 100,
             fadeDuration: 100,
             moveDuration: 0,
+            fadeWhenMove: false,
             screenPercent: 0.88,
             backOpacity: 0.35,
             shadowOpacity: 0,
@@ -167,7 +186,9 @@
             borderColor: 'white',
             borderRadius: 0,
             scrollBars: false,
-            fadeWhenMove: false
+            prevImage: false,
+            nextImage: false,
+            closeImage: false
         });
     </script>
 </body>

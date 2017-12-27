@@ -33,6 +33,7 @@ Group of photos:
 $(".photo").frydBox();
 </script>
 ```
+If you want to hide previous, next or close navigation images, just type false.
 
 ## Configuration
 You can set optional parameters:
@@ -42,16 +43,20 @@ $(".photo").frydBox({
    prefix: 'frydBox_',
    lazyLoading: true,
    lazyLoadingDelay: 100,
-   fadeDuration: 400,
-   moveDuration: 800,
+   fadeDuration: 500,
+   moveDuration: 700,
+   fadeWhenMove: true,
    screenPercent: 0.88,
    backOpacity: 0.6,
    shadowOpacity: 0.6,
    shadowSize: 18,
-   borderSize: 12,
-   borderColor: 'white',
+   borderSize: 10,
+   borderColor: '#fff',
    borderRadius: 8,
-   scrollBars: false
+   scrollBars: false,
+   prevImage: 'prev.png',
+   nextImage: 'next.png',
+   closeImage: 'close.png'
 });
 </script>
 ```
