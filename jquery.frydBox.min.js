@@ -5,7 +5,7 @@
  * Copyright (c) 2017 Kamil Frydlewicz
  * www.frydlewicz.pl
  *
- * Version: 1.0.1
+ * Version: 1.0.2
  * Requires: jQuery v1.2+
  *
  * MIT license:

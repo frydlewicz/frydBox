@@ -1,4 +1,4 @@
-# frydBox 1.0.1
+# frydBox 1.0.2
 Plugin for jQuery library being a free and lightweight alternative for Lightbox or Fancybox. Compatible with jQuery since version 1.2.0 and 99% browsers, mobile friendly. Embedded lazy loading. You can specify prefix of the class, background opacity, modal size, border radius and other parameters. It's free also in commercial use.
 
 ## Installation
