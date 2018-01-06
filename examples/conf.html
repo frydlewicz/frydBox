@@ -23,7 +23,7 @@
         }
         
         .td-prefix,
-        .td-type {
+        .td-example {
             font-family: monospace;
         }
         
@@ -135,6 +135,12 @@
                     <td class="td-example">8</td>
                 </tr>
                 <tr>
+                    <td class="td-prefix">showLoader</td>
+                    <td class="td-desc">Show animated loader</td>
+                    <td class="td-type">boolean</td>
+                    <td class="td-example">true</td>
+                </tr>
+                <tr>
                     <td class="td-prefix">scrollBars</td>
                     <td class="td-desc">Allow site scrollbars when modal</td>
                     <td class="td-type">boolean</td>
@@ -157,6 +163,54 @@
                     <td class="td-desc">Navigation close image url</td>
                     <td class="td-type">string / boolean</td>
                     <td class="td-example">'close.png' / false</td>
+                </tr>
+                <tr>
+                    <td class="td-prefix">onClickLink</td>
+                    <td class="td-desc">When user clicks frydBox link</td>
+                    <td class="td-type">function</td>
+                    <td class="td-example">function(galleryIndex, imageIndex, src) {}</td>
+                </tr>
+                <tr>
+                    <td class="td-prefix">onClickPrev</td>
+                    <td class="td-desc">When user opens previous image</td>
+                    <td class="td-type">function</td>
+                    <td class="td-example">function(src) {}</td>
+                </tr>
+                <tr>
+                    <td class="td-prefix">onClickNext</td>
+                    <td class="td-desc">When user opens next image</td>
+                    <td class="td-type">function</td>
+                    <td class="td-example">function(src) {}</td>
+                </tr>
+                <tr>
+                    <td class="td-prefix">onImageLoaded</td>
+                    <td class="td-desc">When image finishes loading</td>
+                    <td class="td-type">function</td>
+                    <td class="td-example">function(src) {}</td>
+                </tr>
+                <tr>
+                    <td class="td-prefix">onImageShowed</td>
+                    <td class="td-desc">When image finishes all animations</td>
+                    <td class="td-type">function</td>
+                    <td class="td-example">function(src) {}</td>
+                </tr>
+                <tr>
+                    <td class="td-prefix">onClose</td>
+                    <td class="td-desc">When user closes frydBox</td>
+                    <td class="td-type">function</td>
+                    <td class="td-example">function() {}</td>
+                </tr>
+                <tr>
+                    <td class="td-prefix">onLazyLoadingStart</td>
+                    <td class="td-desc">When lazy loading starts</td>
+                    <td class="td-type">function</td>
+                    <td class="td-example">function() {}</td>
+                </tr>
+                <tr>
+                    <td class="td-prefix">onLazyLoadingEnd</td>
+                    <td class="td-desc">When lazy loading ends</td>
+                    <td class="td-type">function</td>
+                    <td class="td-example">function() {}</td>
                 </tr>
             </tbody>
         </table>
@@ -185,6 +239,7 @@
             borderSize: 5,
             borderColor: 'white',
             borderRadius: 0,
+            showLoader: false,
             scrollBars: false,
             prevImage: false,
             nextImage: false,

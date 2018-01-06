@@ -1,5 +1,5 @@
-# frydBox 1.0.2
-Plugin for jQuery library being a free and lightweight alternative for Lightbox or Fancybox. Compatible with jQuery since version 1.2.0 and 99% browsers, mobile friendly. Embedded lazy loading. You can specify prefix of the class, background opacity, modal size, border radius and other parameters. It's free also in commercial use.
+# frydBox 1.0.3
+Plugin for jQuery library being a free and lightweight (~9kB) alternative for Lightbox or Fancybox. Compatible with jQuery since version 1.7 and 99% browsers, mobile friendly. Embedded lazy loading. You can specify prefix of the class, background opacity, modal size, border radius, navigation images and other parameters; frydBox doesn't include any external CSS file. It's free also in commercial use. Since version 1.0.3 you have access to callback functions.
 
 ## Installation
 Include it after jQuery script:
@@ -39,12 +39,19 @@ You can set optional parameters:
 ```html
 <script>
 $(".photo").frydBox({
+   // custom prefix
    prefix: 'frydBox_',
+
+   // enable lazy loading
    lazyLoading: true,
    lazyLoadingDelay: 100,
+
+   // fade and move duration
    fadeDuration: 500,
    moveDuration: 700,
    fadeWhenMove: true,
+
+   // appearance settings
    screenPercent: 0.88,
    backOpacity: 0.6,
    shadowOpacity: 0.6,
@@ -52,10 +59,27 @@ $(".photo").frydBox({
    borderSize: 10,
    borderColor: '#fff',
    borderRadius: 8,
+
+   // show animated loader
+   showLoader: true,
+
+   // hide scroll bars
    scrollBars: false,
+
+   // navigation images
    prevImage: 'prev.png',
    nextImage: 'next.png',
    closeImage: 'close.png'
+
+   // callback functions
+   onClickLink: function(galleryIndex, imageIndex, src) {},
+   onClickPrev: function(src) {},
+   onClickNext: function(src) {},
+   onImageLoaded: function(src) {},
+   onImageShowed: function(src) {},
+   onHide: function() {},
+   onLazyLoadingStart: function() {},
+   onLazyLoadingEnd: function() {}
 });
 </script>
 ```

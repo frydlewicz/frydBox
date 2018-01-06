@@ -5,8 +5,8 @@
  * Copyright (c) 2017 Kamil Frydlewicz
  * www.frydlewicz.pl
  *
- * Version: 1.0.2
- * Requires: jQuery v1.2+
+ * Version: 1.0.3
+ * Requires: jQuery v1.7+
  *
  * MIT license:
  *   http://www.opensource.org/licenses/mit-license.php
@@ -35,22 +35,36 @@ if (typeof jQuery === 'undefined') {
         'position': 'fixed',
         'left': '0',
         'top': '0',
-        'z-index': '999999997',
+        'z-index': '999999995',
         'width': '100%',
         'height': '100%'
+    });
+
+    var cssLoader = $.extend({}, css, {
+        'position': 'fixed',
+        'left': '50%',
+        'top': '50%',
+        'z-index': '999999998',
+        'width': '80px',
+        'height': '80px',
+        'margin': '-50px 0 0 -50px',
+        'border': '10px solid rgba(255,255,255,.4)',
+        'border-top-color': '#fff',
+        'border-radius': '50%',
+        'opacity': '0'
     });
 
     var cssCont = $.extend({}, css, {
         'display': 'none',
         'position': 'fixed',
-        'z-index': '999999998'
+        'z-index': '999999996'
     });
 
     var cssPrev = $.extend({}, css, {
         'position': 'absolute',
         'left': '0',
         'top': '25%',
-        'z-index': '999999999',
+        'z-index': '999999997',
         'width': '50%',
         'height': '50%',
         'overflow': 'hidden',
@@ -65,7 +79,7 @@ if (typeof jQuery === 'undefined') {
         'position': 'absolute',
         'right': '0',
         'top': '25%',
-        'z-index': '999999999',
+        'z-index': '999999997',
         'width': '50%',
         'height': '50%',
         'overflow': 'hidden',
@@ -80,7 +94,7 @@ if (typeof jQuery === 'undefined') {
         'position': 'absolute',
         'right': '-10px',
         'top': '-10px',
-        'z-index': '999999999',
+        'z-index': '999999997',
         'width': '50px',
         'height': '50px',
         'overflow': 'hidden',
@@ -110,12 +124,14 @@ if (typeof jQuery === 'undefined') {
         borderSize: 10,
         borderColor: '#fff',
         borderRadius: 8,
+        showLoader: true,
         scrollBars: false
     };
 
     var $body;
     var $back;
-    var $currentCont = undefined;
+    var $loader;
+    var $currentCont = false;
     var screenWidth;
     var screenHeight;
     var maxWidth;
@@ -125,11 +141,11 @@ if (typeof jQuery === 'undefined') {
 
     /**************************************************************/
 
-    (function() {
+    (function () {
         var scriptUrl;
         var currentScript = document.currentScript;
 
-        if(currentScript) {
+        if (currentScript) {
             scriptUrl = currentScript.src;
         }
         else {
@@ -137,7 +153,7 @@ if (typeof jQuery === 'undefined') {
         }
 
         var lastIndexOf = scriptUrl.lastIndexOf('/');
-        if(lastIndexOf >= 0) {
+        if (lastIndexOf >= 0) {
             path = scriptUrl.substring(0, lastIndexOf + 1);
         }
         else {
@@ -159,10 +175,10 @@ if (typeof jQuery === 'undefined') {
                 hideBox();
                 break;
             case 37:
-                clickPrev($currentCont);
+                clickPrev();
                 break;
             case 39:
-                clickNext($currentCont);
+                clickNext();
                 break;
         }
     }
@@ -179,11 +195,12 @@ if (typeof jQuery === 'undefined') {
         $body = $('body');
         overflow = $body.css('overflow');
 
-        $(window).bind('resize', resize);
-        $(document).bind('keydown', keyDown);
+        $(window).on('resize', resize);
+        $(document).on('keydown', keyDown);
 
         resize();
         appendBack();
+        appendLoader();
     }
 
     /**************************************************************/
@@ -192,10 +209,20 @@ if (typeof jQuery === 'undefined') {
         $back = $('<div id="' + config.prefix + 'back" class="' + config.prefix + 'back"></div>');
         injectCSS(cssBack, $back);
 
-        $back.bind('click', function () {
+        $back.on('click', function () {
             hideBox();
         });
         $body.append($back);
+    }
+
+    function appendLoader() {
+        if (!config.showLoader) {
+            return;
+        }
+
+        $loader = $('<div id="' + config.prefix + 'loader" class="' + config.prefix + 'loader"></div>');
+        injectCSS(cssLoader, $loader);
+        $body.append($loader);
     }
 
     function appendCont(indexCont) {
@@ -209,43 +236,43 @@ if (typeof jQuery === 'undefined') {
     function appendNavi($cont, indexCont) {
         var $prev = $('<span id="' + config.prefix + 'prev-' + indexCont + '" class="' + config.prefix + 'prev">&nbsp;</span>');
         injectCSS(cssPrev, $prev);
-        $prev.bind('mouseenter', function() {
-            if($('.' + config.prefix + 'active').prev('.' + config.prefix + 'img').length) {
-                $(this).css('opacity', '1');
+        $prev.on('mouseenter', function () {
+            if ($('.' + config.prefix + 'active').prev('.' + config.prefix + 'img').length) {
+                $(this).css('opacity', 1);
             }
         });
-        $prev.bind('mouseleave', function() {
-            $(this).css('opacity', '0');
+        $prev.on('mouseleave', function () {
+            $(this).css('opacity', 0);
         });
-        $prev.bind('click', function () {
-            clickPrev($cont);
+        $prev.on('click', function () {
+            clickPrev();
         });
         $cont.append($prev);
 
         var $next = $('<span id="' + config.prefix + 'next-' + indexCont + '" class="' + config.prefix + 'next' + '">&nbsp;</span>');
         injectCSS(cssNext, $next);
-        $next.bind('mouseenter', function() {
-            if($('.' + config.prefix + 'active').next('.' + config.prefix + 'img').length) {
-                $(this).css('opacity', '1');
+        $next.on('mouseenter', function () {
+            if ($('.' + config.prefix + 'active').next('.' + config.prefix + 'img').length) {
+                $(this).css('opacity', 1);
             }
         });
-        $next.bind('mouseleave', function() {
-            $(this).css('opacity', '0');
+        $next.on('mouseleave', function () {
+            $(this).css('opacity', 0);
         });
-        $next.bind('click', function () {
-            clickNext($cont);
+        $next.on('click', function () {
+            clickNext();
         });
         $cont.append($next);
 
         var $close = $('<span id="' + config.prefix + 'close-' + indexCont + '" class="' + config.prefix + 'close' + '">&nbsp;</span>');
         injectCSS(cssClose, $close);
-        $close.bind('mouseenter', function() {
-            $(this).css('opacity', '1');
+        $close.on('mouseenter', function () {
+            $(this).css('opacity', 1);
         });
-        $close.bind('mouseleave', function() {
-            $(this).css('opacity', '0');
+        $close.on('mouseleave', function () {
+            $(this).css('opacity', 0);
         });
-        $close.bind('click', function () {
+        $close.on('click', function () {
             hideBox();
         });
         $cont.append($close);
@@ -297,13 +324,69 @@ if (typeof jQuery === 'undefined') {
         };
     }
 
-    function hideBox() {
-        $('.' + config.prefix + 'cont').fadeOut(config.fadeDuration, function () {
-            var $img = $(this).find('.' + config.prefix + 'img');
+    function showLoader() {
+        if (!config.showLoader) {
+            return;
+        }
 
-            $img.hide();
-            $img.removeClass(config.prefix + 'active');
+        $loader.animate({
+            opacity: 1
+        }, {
+            duration: config.fadeDuration,
+            queue: false
         });
+
+        (function animateLoader() {
+            $loader.animate({
+                rotation: '+=360'
+            }, {
+                duration: 1000,
+                easing: 'linear',
+                queue: false,
+                step: function (now) {
+                    var angle = now % 360;
+                    var value = 'rotate(' + angle + 'deg)';
+
+                    $loader.css({
+                        '-webkit-transform': value,
+                        '-ms-transform': value,
+                        'transform': value
+                    });
+                },
+                complete: animateLoader
+            });
+        })();
+    }
+
+    function hideLoader() {
+        if (!config.showLoader) {
+            return;
+        }
+
+        $loader.animate({
+            opacity: 0
+        }, {
+            duration: config.fadeDuration,
+            queue: false,
+            complete: function () {
+                $loader.stop();
+            }
+        });
+    }
+
+    function hideBox() {
+        hideLoader();
+
+        if ($currentCont) {
+            $currentCont.fadeOut(config.fadeDuration, function () {
+                var $img = $currentCont.find('.' + config.prefix + 'img');
+                $img.hide();
+                $img.removeClass(config.prefix + 'active');
+
+                $currentCont.stop();
+                $currentCont = false;
+            });
+        }
 
         $back.fadeOut(config.fadeDuration, function () {
             if (!config.scrollBars) {
@@ -311,7 +394,9 @@ if (typeof jQuery === 'undefined') {
             }
         });
 
-        $currentCont = undefined;
+        if (typeof config.onClose === 'function') {
+            config.onClose();
+        }
     }
 
     /**************************************************************/
@@ -322,39 +407,52 @@ if (typeof jQuery === 'undefined') {
         var indexCont = $(this).attr('data-cont');
         var indexImg = $(this).attr('data-img');
 
-        var $cont = $('#' + config.prefix + 'cont-' + indexCont);
+        var $cont = $currentCont = $('#' + config.prefix + 'cont-' + indexCont);
         var $img = $('#' + config.prefix + 'img-' + indexCont + '-' + indexImg);
 
-        $img.unbind('load').bind('load', function () {
-            var offset = setSizeAndGetPos($cont, $img);
+        var src = $img.attr('data-src');
 
+        $img.off('load').on('load', function () {
+            if (typeof config.onImageLoaded === 'function') {
+                config.onImageLoaded(src);
+            }
+
+            var offset = setSizeAndGetPos($cont, $img);
             $cont.css('left', Math.round(offset.left) + 'px');
             $cont.css('top', Math.round(offset.top) + 'px');
 
             $img.show();
-            $cont.fadeIn(config.fadeDuration);
+            hideLoader();
+
+            $cont.fadeIn(config.fadeDuration, function () {
+                $img.addClass(config.prefix + 'active');
+
+                if (typeof config.onImageShowed === 'function') {
+                    config.onImageShowed(src);
+                }
+            });
         });
 
         if (!config.scrollBars) {
             $body.css('overflow', 'hidden');
         }
 
+        showLoader();
         $back.fadeIn(config.fadeDuration, function () {
-            var src = $img.attr('data-src');
-
             $img.attr('src', src);
-            $img.addClass(config.prefix + 'active');
         });
 
-        $currentCont = $cont;
+        if (typeof config.onClickLink === 'function') {
+            config.onClickLink(indexCont, indexImg, src);
+        }
     }
 
-    function clickPrev($cont) {
-        if (typeof $cont === 'undefined') {
+    function clickPrev() {
+        if (!$currentCont) {
             return;
         }
 
-        var $img = $cont.find('.' + config.prefix + 'active');
+        var $img = $currentCont.find('.' + config.prefix + 'active');
         if ($img.length === 0) {
             return;
         }
@@ -364,9 +462,15 @@ if (typeof jQuery === 'undefined') {
             return;
         }
 
-        $imgPrev.unbind('load').bind('load', function () {
+        var src = $imgPrev.attr('data-src');
+
+        $imgPrev.off('load').on('load', function () {
+            if (typeof config.onImageLoaded === 'function') {
+                config.onImageLoaded(src);
+            }
+
             if (config.fadeWhenMove) {
-                $cont.animate({
+                $currentCont.animate({
                     opacity: 0
                 }, {
                     duration: config.fadeDuration,
@@ -374,19 +478,21 @@ if (typeof jQuery === 'undefined') {
                 });
             }
 
-            $cont.animate({
+            $currentCont.animate({
                 left: screenWidth + 'px'
             }, {
                 duration: config.moveDuration,
                 queue: false,
                 complete: function () {
-                    $cont.css('left', -screenWidth + 'px');
+                    $currentCont.css('left', -screenWidth + 'px');
 
                     $img.hide();
                     $imgPrev.show();
 
-                    var offset = setSizeAndGetPos($cont, $imgPrev);
-                    $cont.css('top', Math.round(offset.top) + 'px');
+                    var offset = setSizeAndGetPos($currentCont, $imgPrev);
+                    $currentCont.css('top', Math.round(offset.top) + 'px');
+
+                    hideLoader();
 
                     if (config.fadeWhenMove) {
                         var waitMilisec = 0;
@@ -395,7 +501,7 @@ if (typeof jQuery === 'undefined') {
                         }
 
                         setTimeout(function () {
-                            $cont.animate({
+                            $currentCont.animate({
                                 opacity: 1
                             }, {
                                 duration: config.fadeDuration,
@@ -404,29 +510,38 @@ if (typeof jQuery === 'undefined') {
                         }, waitMilisec);
                     }
 
-                    $cont.animate({
+                    $currentCont.animate({
                         left: Math.round(offset.left) + 'px'
                     }, {
                         duration: config.moveDuration,
-                        queue: false
+                        queue: false,
+                        complete: function () {
+                            $img.removeClass(config.prefix + 'active');
+                            $imgPrev.addClass(config.prefix + 'active');
+
+                            if (typeof config.onImageShowed === 'function') {
+                                config.onImageShowed(src);
+                            }
+                        }
                     });
                 }
             });
         });
 
-        var src = $imgPrev.attr('data-src');
+        showLoader();
         $imgPrev.attr('src', src);
 
-        $img.removeClass(config.prefix + 'active');
-        $imgPrev.addClass(config.prefix + 'active');
+        if (typeof config.onClickPrev === 'function') {
+            config.onClickPrev(src);
+        }
     }
 
-    function clickNext($cont) {
-        if (typeof $cont === 'undefined') {
+    function clickNext() {
+        if (!$currentCont) {
             return;
         }
 
-        var $img = $cont.find('.' + config.prefix + 'active');
+        var $img = $currentCont.find('.' + config.prefix + 'active');
         if ($img.length === 0) {
             return;
         }
@@ -436,9 +551,15 @@ if (typeof jQuery === 'undefined') {
             return;
         }
 
-        $imgNext.unbind('load').bind('load', function () {
+        var src = $imgNext.attr('data-src');
+
+        $imgNext.off('load').on('load', function () {
+            if (typeof config.onImageLoaded === 'function') {
+                config.onImageLoaded(src);
+            }
+
             if (config.fadeWhenMove) {
-                $cont.animate({
+                $currentCont.animate({
                     opacity: 0
                 }, {
                     duration: config.fadeDuration,
@@ -446,19 +567,21 @@ if (typeof jQuery === 'undefined') {
                 });
             }
 
-            $cont.animate({
+            $currentCont.animate({
                 left: -screenWidth + 'px'
             }, {
                 duration: config.moveDuration,
                 queue: false,
                 complete: function () {
-                    $cont.css('left', screenWidth + 'px');
+                    $currentCont.css('left', screenWidth + 'px');
 
                     $img.hide();
                     $imgNext.show();
 
-                    var offset = setSizeAndGetPos($cont, $imgNext);
-                    $cont.css('top', Math.round(offset.top) + 'px');
+                    var offset = setSizeAndGetPos($currentCont, $imgNext);
+                    $currentCont.css('top', Math.round(offset.top) + 'px');
+
+                    hideLoader();
 
                     if (config.fadeWhenMove) {
                         var waitMilisec = 0;
@@ -467,7 +590,7 @@ if (typeof jQuery === 'undefined') {
                         }
 
                         setTimeout(function () {
-                            $cont.animate({
+                            $currentCont.animate({
                                 opacity: 1
                             }, {
                                 duration: config.fadeDuration,
@@ -476,28 +599,45 @@ if (typeof jQuery === 'undefined') {
                         }, waitMilisec);
                     }
 
-                    $cont.animate({
+                    $currentCont.animate({
                         left: Math.round(offset.left) + 'px'
                     }, {
                         duration: config.moveDuration,
-                        queue: false
+                        queue: false,
+                        complete: function () {
+                            $img.removeClass(config.prefix + 'active');
+                            $imgNext.addClass(config.prefix + 'active');
+
+                            if (typeof config.onImageShowed === 'function') {
+                                config.onImageShowed(src);
+                            }
+                        }
                     });
                 }
             });
         });
 
-        var src = $imgNext.attr('data-src');
+        showLoader();
         $imgNext.attr('src', src);
 
-        $img.removeClass(config.prefix + 'active');
-        $imgNext.addClass(config.prefix + 'active');
+        if (typeof config.onClickNext === 'function') {
+            config.onClickNext(src);
+        }
     }
 
     /**************************************************************/
 
     function lazyLoading(array) {
         function loadImage(index) {
+            if (typeof config.onLazyLoadingStart === 'function') {
+                config.onLazyLoadingStart();
+            }
+
             if (index >= array.length) {
+                if (typeof config.onLazyLoadingEnd === 'function') {
+                    config.onLazyLoadingEnd();
+                }
+
                 return;
             }
 
@@ -518,32 +658,32 @@ if (typeof jQuery === 'undefined') {
     $.fn.frydBox = function (options) {
         $.extend(config, options);
 
-        cssBack['background'] = 'rgba(0, 0, 0, ' + config.backOpacity + ')';
+        cssBack['background'] = 'rgba(0,0,0,' + config.backOpacity + ')';
 
-        if(typeof config.prevImage === 'undefined') {
+        if (typeof config.prevImage === 'undefined') {
             config.prevImage = path + 'prev.png';
         }
-        if(config.prevImage !== false) {
+        if (config.prevImage !== false) {
             cssPrev['background'] = 'url(' + config.prevImage + ') ' + cssPrev['background'];
         }
 
-        if(typeof config.nextImage === 'undefined') {
+        if (typeof config.nextImage === 'undefined') {
             config.nextImage = path + 'next.png';
         }
-        if(config.nextImage !== false) {
+        if (config.nextImage !== false) {
             cssNext['background'] = 'url(' + config.nextImage + ') ' + cssNext['background'];
         }
 
-        if(typeof config.closeImage === 'undefined') {
+        if (typeof config.closeImage === 'undefined') {
             config.closeImage = path + 'close.png';
         }
-        if(config.closeImage !== false) {
+        if (config.closeImage !== false) {
             cssClose['background'] = 'url(' + config.closeImage + ') ' + cssClose['background'];
         }
 
         cssImg['border'] = config.borderSize + 'px solid ' + config.borderColor;
         cssImg['border-radius'] = config.borderRadius + 'px';
-        cssImg['box-shadow'] = '0 0 ' + config.shadowSize + 'px rgba(0, 0, 0, ' + config.shadowOpacity + ')';
+        cssImg['box-shadow'] = '0 0 ' + config.shadowSize + 'px rgba(0,0,0,' + config.shadowOpacity + ')';
 
         if (window[name].count === 0) {
             build();
@@ -563,7 +703,7 @@ if (typeof jQuery === 'undefined') {
 
             $(this).attr('data-cont', window[name].count);
             $(this).attr('data-img', indexImg);
-            $(this).unbind('click').bind('click', clickLink);
+            $(this).off('click').on('click', clickLink);
 
             ++indexImg;
         });
@@ -572,7 +712,7 @@ if (typeof jQuery === 'undefined') {
             if (document.readyState === 'complete') {
                 lazyLoading(array);
             } else {
-                $(window).bind('load', function () {
+                $(window).on('load', function () {
                     lazyLoading(array);
                 });
             }
