@@ -5,7 +5,7 @@
  * Copyright (c) 2017 Kamil Frydlewicz
  * www.frydlewicz.pl
  *
- * Version: 1.0.3
+ * Version: 1.0.4
  * Requires: jQuery v1.7+
  *
  * MIT license:
@@ -113,6 +113,7 @@ if (typeof jQuery === 'undefined') {
     var config = {
         prefix: 'frydBox_',
         lazyLoading: true,
+        lazyLoadingStart: 1000,
         lazyLoadingDelay: 100,
         fadeDuration: 500,
         moveDuration: 700,
@@ -138,6 +139,7 @@ if (typeof jQuery === 'undefined') {
     var maxHeight;
     var overflow;
     var path;
+    var locked = false;
 
     /**************************************************************/
 
@@ -293,7 +295,7 @@ if (typeof jQuery === 'undefined') {
         var width = parseInt($img[0]['naturalWidth']) + 2 * config.borderSize;
         var height = parseInt($img[0]['naturalHeight']) + 2 * config.borderSize;
 
-        if (width === 0 || height === 0) {
+        if (!width || !height) {
             return {
                 left: (screenWidth - maxWidth) / 2,
                 top: (screenHeight - maxWidth) / 2
@@ -377,12 +379,15 @@ if (typeof jQuery === 'undefined') {
     function hideBox() {
         hideLoader();
 
+        $img = $('.' + config.prefix + 'active');
+        if($img.length) {
+            $img.off();
+            $img.removeClass(config.prefix + 'active');
+            $img.hide();
+        }
+
         if ($currentCont) {
             $currentCont.fadeOut(config.fadeDuration, function () {
-                var $img = $currentCont.find('.' + config.prefix + 'img');
-                $img.hide();
-                $img.removeClass(config.prefix + 'active');
-
                 $currentCont.stop();
                 $currentCont = false;
             });
@@ -392,6 +397,7 @@ if (typeof jQuery === 'undefined') {
             if (!config.scrollBars) {
                 $body.css('overflow', overflow);
             }
+            locked = false;
         });
 
         if (typeof config.onClose === 'function') {
@@ -403,6 +409,10 @@ if (typeof jQuery === 'undefined') {
 
     function clickLink(e) {
         e.preventDefault();
+
+        if($currentCont || locked) {
+            return;
+        }
 
         var indexCont = $(this).attr('data-cont');
         var indexImg = $(this).attr('data-img');
@@ -425,7 +435,7 @@ if (typeof jQuery === 'undefined') {
             hideLoader();
 
             $cont.fadeIn(config.fadeDuration, function () {
-                $img.addClass(config.prefix + 'active');
+                locked = false;
 
                 if (typeof config.onImageShowed === 'function') {
                     config.onImageShowed(src);
@@ -438,9 +448,11 @@ if (typeof jQuery === 'undefined') {
         }
 
         showLoader();
-        $back.fadeIn(config.fadeDuration, function () {
-            $img.attr('src', src);
-        });
+        $back.fadeIn(config.fadeDuration);
+        locked = true;
+        $img.attr('src', src);
+
+        $img.addClass(config.prefix + 'active');
 
         if (typeof config.onClickLink === 'function') {
             config.onClickLink(indexCont, indexImg, src);
@@ -448,17 +460,17 @@ if (typeof jQuery === 'undefined') {
     }
 
     function clickPrev() {
-        if (!$currentCont) {
+        if (!$currentCont || locked) {
             return;
         }
 
         var $img = $currentCont.find('.' + config.prefix + 'active');
-        if ($img.length === 0) {
+        if (!$img.length) {
             return;
         }
 
         var $imgPrev = $img.prev('.' + config.prefix + 'img');
-        if ($imgPrev.length === 0) {
+        if (!$imgPrev.length) {
             return;
         }
 
@@ -489,6 +501,10 @@ if (typeof jQuery === 'undefined') {
                     $img.hide();
                     $imgPrev.show();
 
+                    if(!$imgPrev.prev('.' + config.prefix + 'img').length) {
+                        $currentCont.find('.' + config.prefix + 'prev').css('opacity', 0);
+                    }
+
                     var offset = setSizeAndGetPos($currentCont, $imgPrev);
                     $currentCont.css('top', Math.round(offset.top) + 'px');
 
@@ -516,8 +532,7 @@ if (typeof jQuery === 'undefined') {
                         duration: config.moveDuration,
                         queue: false,
                         complete: function () {
-                            $img.removeClass(config.prefix + 'active');
-                            $imgPrev.addClass(config.prefix + 'active');
+                            locked = false;
 
                             if (typeof config.onImageShowed === 'function') {
                                 config.onImageShowed(src);
@@ -529,7 +544,11 @@ if (typeof jQuery === 'undefined') {
         });
 
         showLoader();
+        locked = true;
         $imgPrev.attr('src', src);
+
+        $img.removeClass(config.prefix + 'active');
+        $imgPrev.addClass(config.prefix + 'active');
 
         if (typeof config.onClickPrev === 'function') {
             config.onClickPrev(src);
@@ -537,17 +556,17 @@ if (typeof jQuery === 'undefined') {
     }
 
     function clickNext() {
-        if (!$currentCont) {
+        if (!$currentCont || locked) {
             return;
         }
 
         var $img = $currentCont.find('.' + config.prefix + 'active');
-        if ($img.length === 0) {
+        if (!$img.length) {
             return;
         }
 
         var $imgNext = $img.next('.' + config.prefix + 'img');
-        if ($imgNext.length === 0) {
+        if (!$imgNext.length) {
             return;
         }
 
@@ -578,6 +597,10 @@ if (typeof jQuery === 'undefined') {
                     $img.hide();
                     $imgNext.show();
 
+                    if(!$imgNext.next('.' + config.prefix + 'img').length) {
+                        $currentCont.find('.' + config.prefix + 'next').css('opacity', 0);
+                    }
+
                     var offset = setSizeAndGetPos($currentCont, $imgNext);
                     $currentCont.css('top', Math.round(offset.top) + 'px');
 
@@ -605,8 +628,7 @@ if (typeof jQuery === 'undefined') {
                         duration: config.moveDuration,
                         queue: false,
                         complete: function () {
-                            $img.removeClass(config.prefix + 'active');
-                            $imgNext.addClass(config.prefix + 'active');
+                            locked = false;
 
                             if (typeof config.onImageShowed === 'function') {
                                 config.onImageShowed(src);
@@ -618,7 +640,11 @@ if (typeof jQuery === 'undefined') {
         });
 
         showLoader();
+        locked = true;
         $imgNext.attr('src', src);
+
+        $img.removeClass(config.prefix + 'active');
+        $imgNext.addClass(config.prefix + 'active');
 
         if (typeof config.onClickNext === 'function') {
             config.onClickNext(src);
@@ -629,10 +655,6 @@ if (typeof jQuery === 'undefined') {
 
     function lazyLoading(array) {
         function loadImage(index) {
-            if (typeof config.onLazyLoadingStart === 'function') {
-                config.onLazyLoadingStart();
-            }
-
             if (index >= array.length) {
                 if (typeof config.onLazyLoadingEnd === 'function') {
                     config.onLazyLoadingEnd();
@@ -648,7 +670,13 @@ if (typeof jQuery === 'undefined') {
             img.src = array[index];
         }
 
-        setTimeout(loadImage, config.lazyLoadingDelay, 0);
+        setTimeout(function() {
+            if (typeof config.onLazyLoadingStart === 'function') {
+                config.onLazyLoadingStart();
+            }
+
+            loadImage(0);
+        }, config.lazyLoadingStart);
     }
 
     window[name] = {
@@ -685,7 +713,7 @@ if (typeof jQuery === 'undefined') {
         cssImg['border-radius'] = config.borderRadius + 'px';
         cssImg['box-shadow'] = '0 0 ' + config.shadowSize + 'px rgba(0,0,0,' + config.shadowOpacity + ')';
 
-        if (window[name].count === 0) {
+        if (!window[name].count) {
             build();
         }
 

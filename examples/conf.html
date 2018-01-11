@@ -11,6 +11,11 @@
     <title>frydBox examples - configuration</title>
 
     <style>
+        img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+
         .table-conf {
             margin-top: 10px;
             border-collapse: collapse;
@@ -68,6 +73,12 @@
                     <td class="td-type">boolean</td>
                     <td class="td-example">true</td>
                 </tr>
+                <tr>
+                        <td class="td-prefix">lazyLoadingStart</td>
+                        <td class="td-desc">Time (in millisec) when first download starts</td>
+                        <td class="td-type">number</td>
+                        <td class="td-example">1000</td>
+                    </tr>
                 <tr>
                     <td class="td-prefix">lazyLoadingDelay</td>
                     <td class="td-desc">Time (in millisec) between each download</td>
@@ -228,6 +239,7 @@
         $(".photo").frydBox({
             prefix: 'frydBoxNewPrefix_',
             lazyLoading: true,
+            lazyLoadingStart: 1000,
             lazyLoadingDelay: 100,
             fadeDuration: 100,
             moveDuration: 0,

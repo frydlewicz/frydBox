@@ -1,4 +1,4 @@
-# frydBox 1.0.3
+# frydBox 1.0.4
 Plugin for jQuery library being a free and lightweight (~9kB) alternative for Lightbox or Fancybox. Compatible with jQuery since version 1.7 and 99% browsers, mobile friendly. Embedded lazy loading. You can specify prefix of the class, background opacity, modal size, border radius, navigation images and other parameters; frydBox doesn't include any external CSS file. It's free also in commercial use. Since version 1.0.3 you have access to callback functions.
 
 ## Installation
@@ -44,6 +44,7 @@ $(".photo").frydBox({
 
    // enable lazy loading
    lazyLoading: true,
+   lazyLoadingStart: 1000,
    lazyLoadingDelay: 100,
 
    // fade and move duration
