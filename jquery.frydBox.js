@@ -5,7 +5,7 @@
  * Copyright (c) 2017 Kamil Frydlewicz
  * www.frydlewicz.pl
  *
- * Version: 1.0.4
+ * Version: 1.0.5
  * Requires: jQuery v1.7+
  *
  * MIT license:
@@ -20,6 +20,7 @@ if (typeof jQuery === 'undefined') {
     var name = 'frydBox';
 
     var css = {
+        'display': 'block',
         'box-sizing': 'border-box',
         'padding': '0',
         'margin': '0',
@@ -41,6 +42,7 @@ if (typeof jQuery === 'undefined') {
     });
 
     var cssLoader = $.extend({}, css, {
+        'display': 'none',
         'position': 'fixed',
         'left': '50%',
         'top': '50%',
@@ -57,7 +59,8 @@ if (typeof jQuery === 'undefined') {
     var cssCont = $.extend({}, css, {
         'display': 'none',
         'position': 'fixed',
-        'z-index': '999999996'
+        'z-index': '999999996',
+        'opacity': '0'
     });
 
     var cssPrev = $.extend({}, css, {
@@ -331,6 +334,7 @@ if (typeof jQuery === 'undefined') {
             return;
         }
 
+        $loader.css('display', 'block');
         $loader.animate({
             opacity: 1
         }, {
@@ -372,6 +376,7 @@ if (typeof jQuery === 'undefined') {
             queue: false,
             complete: function () {
                 $loader.stop();
+                $loader.css('display', 'none');
             }
         });
     }
@@ -380,16 +385,24 @@ if (typeof jQuery === 'undefined') {
         hideLoader();
 
         $img = $('.' + config.prefix + 'active');
-        if($img.length) {
+        if ($img.length) {
             $img.off();
             $img.removeClass(config.prefix + 'active');
-            $img.hide();
         }
 
         if ($currentCont) {
-            $currentCont.fadeOut(config.fadeDuration, function () {
-                $currentCont.stop();
-                $currentCont = false;
+            $currentCont.stop().animate({
+                opacity: 0
+            }, {
+                duration: config.fadeDuration,
+                queue: false,
+                complete: function () {
+                    $currentCont.find('.' + config.prefix + 'img').each(function () {
+                        $(this).hide();
+                    });
+                    $currentCont.css('display', 'none');
+                    $currentCont = false;
+                }
             });
         }
 
@@ -410,7 +423,7 @@ if (typeof jQuery === 'undefined') {
     function clickLink(e) {
         e.preventDefault();
 
-        if($currentCont || locked) {
+        if ($currentCont || locked) {
             return;
         }
 
@@ -434,11 +447,18 @@ if (typeof jQuery === 'undefined') {
             $img.show();
             hideLoader();
 
-            $cont.fadeIn(config.fadeDuration, function () {
-                locked = false;
+            $cont.css('display', 'block');
+            $cont.animate({
+                opacity: 1
+            }, {
+                duration: config.fadeDuration,
+                queue: false,
+                complete: function () {
+                    locked = false;
 
-                if (typeof config.onImageShowed === 'function') {
-                    config.onImageShowed(src);
+                    if (typeof config.onImageShowed === 'function') {
+                        config.onImageShowed(src);
+                    }
                 }
             });
         });
@@ -501,7 +521,7 @@ if (typeof jQuery === 'undefined') {
                     $img.hide();
                     $imgPrev.show();
 
-                    if(!$imgPrev.prev('.' + config.prefix + 'img').length) {
+                    if (!$imgPrev.prev('.' + config.prefix + 'img').length) {
                         $currentCont.find('.' + config.prefix + 'prev').css('opacity', 0);
                     }
 
@@ -597,7 +617,7 @@ if (typeof jQuery === 'undefined') {
                     $img.hide();
                     $imgNext.show();
 
-                    if(!$imgNext.next('.' + config.prefix + 'img').length) {
+                    if (!$imgNext.next('.' + config.prefix + 'img').length) {
                         $currentCont.find('.' + config.prefix + 'next').css('opacity', 0);
                     }
 
@@ -670,7 +690,7 @@ if (typeof jQuery === 'undefined') {
             img.src = array[index];
         }
 
-        setTimeout(function() {
+        setTimeout(function () {
             if (typeof config.onLazyLoadingStart === 'function') {
                 config.onLazyLoadingStart();
             }
