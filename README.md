@@ -91,5 +91,8 @@ If you want to hide previous, next or close navigation images, just type false.
 * [Group of photos](https://frydlewicz.pl/app/frydBox/examples/group.html)
 * [Configuration](https://frydlewicz.pl/app/frydBox/examples/conf.html)
 
+## Author
+[Kamil Frydlewicz](https://frydlewicz.pl)
+
 ## License
 [MIT License](LICENSE.txt)
