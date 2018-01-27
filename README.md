@@ -58,7 +58,7 @@ $(".photo").frydBox({
    fadeWhenMove: true,
 
    // appearance settings
-   screenPercent: 0.88,
+   screenPercent: 0.9,
    backOpacity: 0.6,
    shadowOpacity: 0.6,
    shadowSize: 18,
