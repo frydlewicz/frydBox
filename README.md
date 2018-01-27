@@ -1,4 +1,9 @@
 # frydBox 1.0.5
+
+![frydBox version](https://img.shields.io/badge/frydBox-1.0.5-green.svg)
+[![License](https://img.shields.io/badge/license-MIT-red.svg)](https://opensource.org/licenses/MIT)
+[![PayPal donate](https://img.shields.io/badge/donate-PayPal-blue.svg)](https://www.paypal.com/pools/c/80Y6qAZyX8)
+
 Plugin for jQuery library being a free and lightweight (less than 10kB) alternative for Lightbox or Fancybox. Compatible with jQuery since version 1.7 and 99% browsers, mobile friendly. Embedded lazy loading. You can specify prefix of the class, background opacity, modal size, border radius, navigation images and other parameters; frydBox doesn't include any external CSS file. It's free also in commercial use. Since version 1.0.3 you have access to callback functions.
 
 ## Installation
