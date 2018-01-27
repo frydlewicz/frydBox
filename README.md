@@ -1,6 +1,6 @@
-# frydBox 1.0.5
+# frydBox 1.0.6
 
-![frydBox version](https://img.shields.io/badge/frydBox-1.0.5-green.svg)
+![frydBox version](https://img.shields.io/badge/frydBox-1.0.6-green.svg)
 [![License](https://img.shields.io/badge/license-MIT-red.svg)](https://opensource.org/licenses/MIT)
 [![PayPal donate](https://img.shields.io/badge/donate-PayPal-blue.svg)](https://www.paypal.com/pools/c/80Y6qAZyX8)
 
@@ -54,7 +54,7 @@ $(".photo").frydBox({
 
    // fade and move duration
    fadeDuration: 500,
-   moveDuration: 700,
+   moveDuration: 750,
    fadeWhenMove: true,
 
    // appearance settings

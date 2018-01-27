@@ -5,14 +5,14 @@
  * Copyright (c) 2017 Kamil Frydlewicz
  * www.frydlewicz.pl
  *
- * Version: 1.0.5
+ * Version: 1.0.6
  * Requires: jQuery v1.7+
  *
  * MIT license:
  *   http://www.opensource.org/licenses/mit-license.php
  */
 
-if (typeof jQuery === 'undefined') {
+if (typeof jQuery == 'undefined') {
     throw new Error('frydBox requires jQuery')
 }
 
@@ -119,9 +119,9 @@ if (typeof jQuery === 'undefined') {
         lazyLoadingStart: 1000,
         lazyLoadingDelay: 100,
         fadeDuration: 500,
-        moveDuration: 700,
+        moveDuration: 750,
         fadeWhenMove: true,
-        screenPercent: 0.88,
+        screenPercent: 0.9,
         backOpacity: 0.6,
         shadowOpacity: 0.6,
         shadowSize: 18,
@@ -147,14 +147,19 @@ if (typeof jQuery === 'undefined') {
     /**************************************************************/
 
     (function () {
-        var scriptUrl;
+        var scriptUrl = location.href;
         var currentScript = document.currentScript;
 
         if (currentScript) {
             scriptUrl = currentScript.src;
         }
         else {
-            scriptUrl = location.href;
+            $('script').each(function () {
+                var src = $(this).attr('src');
+                if (src.indexOf(name) > -1) {
+                    scriptUrl = src;
+                }
+            });
         }
 
         var lastIndexOf = scriptUrl.lastIndexOf('/');
@@ -308,13 +313,11 @@ if (typeof jQuery === 'undefined') {
         var newWidth = width;
         var newHeight = height;
 
-        if (width / height > screenWidth / screenHeight) {
-            if (width > screenWidth) {
+        if (width > maxWidth || height > maxHeight) {
+            if (width / height > screenWidth / screenHeight) {
                 newWidth = maxWidth;
                 newHeight = maxWidth * height / width;
-            }
-        } else {
-            if (height > screenHeight) {
+            } else {
                 newHeight = maxHeight;
                 newWidth = maxHeight * width / height;
             }
@@ -413,7 +416,7 @@ if (typeof jQuery === 'undefined') {
             locked = false;
         });
 
-        if (typeof config.onClose === 'function') {
+        if (typeof config.onClose == 'function') {
             config.onClose();
         }
     }
@@ -436,7 +439,7 @@ if (typeof jQuery === 'undefined') {
         var src = $img.attr('data-src');
 
         $img.off('load').on('load', function () {
-            if (typeof config.onImageLoaded === 'function') {
+            if (typeof config.onImageLoaded == 'function') {
                 config.onImageLoaded(src);
             }
 
@@ -456,7 +459,7 @@ if (typeof jQuery === 'undefined') {
                 complete: function () {
                     locked = false;
 
-                    if (typeof config.onImageShowed === 'function') {
+                    if (typeof config.onImageShowed == 'function') {
                         config.onImageShowed(src);
                     }
                 }
@@ -470,11 +473,17 @@ if (typeof jQuery === 'undefined') {
         showLoader();
         $back.fadeIn(config.fadeDuration);
         locked = true;
-        $img.attr('src', src);
+
+        if ($img.attr('src') != src) {
+            $img.attr('src', src);
+        }
+        else {
+            $img.trigger('load');
+        }
 
         $img.addClass(config.prefix + 'active');
 
-        if (typeof config.onClickLink === 'function') {
+        if (typeof config.onClickLink == 'function') {
             config.onClickLink(indexCont, indexImg, src);
         }
     }
@@ -497,7 +506,7 @@ if (typeof jQuery === 'undefined') {
         var src = $imgPrev.attr('data-src');
 
         $imgPrev.off('load').on('load', function () {
-            if (typeof config.onImageLoaded === 'function') {
+            if (typeof config.onImageLoaded == 'function') {
                 config.onImageLoaded(src);
             }
 
@@ -554,7 +563,7 @@ if (typeof jQuery === 'undefined') {
                         complete: function () {
                             locked = false;
 
-                            if (typeof config.onImageShowed === 'function') {
+                            if (typeof config.onImageShowed == 'function') {
                                 config.onImageShowed(src);
                             }
                         }
@@ -565,12 +574,18 @@ if (typeof jQuery === 'undefined') {
 
         showLoader();
         locked = true;
-        $imgPrev.attr('src', src);
+
+        if ($imgPrev.attr('src') != src) {
+            $imgPrev.attr('src', src);
+        }
+        else {
+            $imgPrev.trigger('load');
+        }
 
         $img.removeClass(config.prefix + 'active');
         $imgPrev.addClass(config.prefix + 'active');
 
-        if (typeof config.onClickPrev === 'function') {
+        if (typeof config.onClickPrev == 'function') {
             config.onClickPrev(src);
         }
     }
@@ -593,7 +608,7 @@ if (typeof jQuery === 'undefined') {
         var src = $imgNext.attr('data-src');
 
         $imgNext.off('load').on('load', function () {
-            if (typeof config.onImageLoaded === 'function') {
+            if (typeof config.onImageLoaded == 'function') {
                 config.onImageLoaded(src);
             }
 
@@ -650,7 +665,7 @@ if (typeof jQuery === 'undefined') {
                         complete: function () {
                             locked = false;
 
-                            if (typeof config.onImageShowed === 'function') {
+                            if (typeof config.onImageShowed == 'function') {
                                 config.onImageShowed(src);
                             }
                         }
@@ -661,12 +676,18 @@ if (typeof jQuery === 'undefined') {
 
         showLoader();
         locked = true;
-        $imgNext.attr('src', src);
+
+        if ($imgNext.attr('src') != src) {
+            $imgNext.attr('src', src);
+        }
+        else {
+            $imgNext.trigger('load');
+        }
 
         $img.removeClass(config.prefix + 'active');
         $imgNext.addClass(config.prefix + 'active');
 
-        if (typeof config.onClickNext === 'function') {
+        if (typeof config.onClickNext == 'function') {
             config.onClickNext(src);
         }
     }
@@ -676,7 +697,7 @@ if (typeof jQuery === 'undefined') {
     function lazyLoading(array) {
         function loadImage(index) {
             if (index >= array.length) {
-                if (typeof config.onLazyLoadingEnd === 'function') {
+                if (typeof config.onLazyLoadingEnd == 'function') {
                     config.onLazyLoadingEnd();
                 }
 
@@ -691,7 +712,7 @@ if (typeof jQuery === 'undefined') {
         }
 
         setTimeout(function () {
-            if (typeof config.onLazyLoadingStart === 'function') {
+            if (typeof config.onLazyLoadingStart == 'function') {
                 config.onLazyLoadingStart();
             }
 
@@ -708,21 +729,21 @@ if (typeof jQuery === 'undefined') {
 
         cssBack['background'] = 'rgba(0,0,0,' + config.backOpacity + ')';
 
-        if (typeof config.prevImage === 'undefined') {
+        if (typeof config.prevImage == 'undefined') {
             config.prevImage = path + 'prev.png';
         }
         if (config.prevImage !== false) {
             cssPrev['background'] = 'url(' + config.prevImage + ') ' + cssPrev['background'];
         }
 
-        if (typeof config.nextImage === 'undefined') {
+        if (typeof config.nextImage == 'undefined') {
             config.nextImage = path + 'next.png';
         }
         if (config.nextImage !== false) {
             cssNext['background'] = 'url(' + config.nextImage + ') ' + cssNext['background'];
         }
 
-        if (typeof config.closeImage === 'undefined') {
+        if (typeof config.closeImage == 'undefined') {
             config.closeImage = path + 'close.png';
         }
         if (config.closeImage !== false) {
@@ -757,7 +778,7 @@ if (typeof jQuery === 'undefined') {
         });
 
         if (config.lazyLoading) {
-            if (document.readyState === 'complete') {
+            if (document.readyState == 'complete') {
                 lazyLoading(array);
             } else {
                 $(window).on('load', function () {
